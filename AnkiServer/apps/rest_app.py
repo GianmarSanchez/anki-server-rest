@@ -247,6 +247,7 @@ class RestApp(object):
         Raises an HTTPBadRequest exception if the request isn't valid JSON."""
         
         try:
+            import pdb; pdb.set_trace()
             data = json.loads(req.body)
         except JSONDecodeError as e:
             logging.error(req.path+': Unable to parse JSON: '+str(e), exc_info=True)
@@ -278,14 +279,14 @@ class RestApp(object):
         if req.path == '/':
             return Response('AnkiServer ' + str(AnkiServer.__version__), content_type='text/plain')
         if req.path == '/list_collections':
-            return Response(json.dumps(self.list_collections()), content_type='application/json')
+            return Response(text=json.dumps(self.list_collections()), content_type='application/json')
 
         # parse the path
         type, name, ids = self._parsePath(req.path)
 
         # get the collection path
         collection_path = self._getCollectionPath(ids[0])
-        print >> collection_path
+        print(collection_path)
 
         # get the handler function
         handler, hasReturnValue = self._getHandler(type, name)
